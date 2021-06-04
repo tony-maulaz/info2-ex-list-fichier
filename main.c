@@ -58,52 +58,6 @@ void print_object(Object* o)
     printf("  - weight : %.2lf\n", o->weight);
 }
 
-// Solution
-typedef struct ElemFile{
-    Object val;
-    struct ElemFile* next;
-} ElemFile;
-
-typedef struct{
-    ElemFile* tete;
-    ElemFile* queue;
-} File;
-
-bool inserer_file(File* f, Object* v){
-    if(f == NULL){
-        return false;
-    }
-
-    ElemFile* e = malloc(sizeof(ElemFile));
-    if( e == NULL ){
-        return false;
-    }
-    e->val = *v;
-    e->next = NULL;
-
-    if(f->queue == NULL){
-        f->tete = e;       
-    }
-    else{
-        f->queue->next = e;
-    }
-    
-    f->queue = e;     
-    return true;   
-}
-
-bool find_obj(File* f, char* name, Object* o){
-    
-    ElemFile* current = f->tete;
-    while( current != NULL ){
-        if( strcmp(name, current->val.name) == 0){
-            *o = current->val;
-            return true;
-        }
-        current = current->next;
-    }    
-    return false;
-}
 
 int main() {
     FILE* f = fopen("data.bin", "w");
@@ -119,25 +73,9 @@ int main() {
     fwrite(&o, sizeof(Object), 1, f);
     fclose(f);
 
-    // Solution
-    File file = {0};
-
-    FILE* fp = fopen("data.bin", "r");
-    Object obj;
-    while( fread(&obj, sizeof(Object), 1, fp) == 1 ){
-        inserer_file(&file, &obj);
-    }
-    fclose(fp);
-
-    ElemFile* current = file.tete;
-    while( current != NULL ){
-        print_object(&(current->val));
-        puts("");
-        current = current->next;
-    }
-
+    // exemple de code pour tester la fonction de recherche
     printf("Test find\n");
-    Object find = {0};
+    /*Object find = {0};
     if( find_obj(&file, "Bar", &find) ){
         print_object(&find);
     }
@@ -150,5 +88,5 @@ int main() {
     }
     else{
         puts("Object not found\n");
-    }
+    }*/
 }
